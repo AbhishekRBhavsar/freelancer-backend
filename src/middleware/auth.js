@@ -3,81 +3,54 @@ const { envConstants } = require('../helpers/constants');
 
 const {
   errorResponse,
-  decrypt,
 } = require('../helpers/helpers');
 
 const { errorMessages } = require('../helpers/messages');
 
-const UsersModel = require('../model/users');
-
-// const authorizationData = [];
+const { Users } = require('../model/users');
 
 exports.authentication = async (req, res, next) => {
   let decoded;
 
-  if (!(req.headers && req.headers.authorization)) {
+  console.log(req.headers.authorization);
+  if (!(req.headers && req.headers.authorization) && !(req.cookies && req.cookies.token)) {
+    console.log('how are you here?');
     return errorResponse(req, res, errorMessages.NO_TOKEN_PROVIDED, 401);
   }
 
-  const token = req.headers.authorization;
+  const token = req.headers.authorization || req.cookies.token;
 
   try {
-    const decryptedToken = decrypt(token);
-    decoded = jwt.decode(decryptedToken);
-    jwt.verify(decryptedToken, envConstants.SECRET);
+    decoded = jwt.verify(token, envConstants.JWT_SECRET);
   } catch (error) {
+    console.log(error);
     if (error.message === 'jwt expired') {
       return errorResponse(req, res, errorMessages.TOKEN_EXPIRED, 401);
     }
     return errorResponse(req, res, error.message, 401);
   }
 
-  const data = await UsersModel.findOne({ _id: decoded._id });
-  if (!data) return errorResponse(req, res, errorMessages.USER_NOT_EXIST, 401);
-  if (!data.status) return errorResponse(req, res, errorMessages.USER_ACC_DISABLED, 401);
+  let data;
+  try {
+    console.log(decoded);
+    data = await Users.findOne({ _id: decoded.id });
+    if (!data) return errorResponse(req, res, errorMessages.USER_NOT_EXIST, 401);
 
-  req.user = data;
+    req.user = data;
 
-  res.locals.ROLE = data.role;
-  res.locals.METHOD = req.method;
-  res.locals.URL = req.url;
-
+    res.locals.ROLE = data.role;
+    res.locals.METHOD = req.method;
+    res.locals.URL = req.url;
+  } catch (error) {
+    console.log(error);
+    return errorResponse(req, res, error.message, 401);
+  }
   return next();
 };
 
-// const validateURL = (req, authorizeURL) => {
-//   const requestURL = req.originalUrl;
-//   const systemURL = req.baseUrl + req.route.path;
-//   const policyURL = authorizeURL;
-//   if (requestURL === systemURL && systemURL === policyURL) return true;
-
-//   const lastSegmentRequestURL = requestURL.substring(requestURL.lastIndexOf('/') + 1);
-//   const lastSegmentSystemURL = systemURL.substring(systemURL.lastIndexOf('/') + 1);
-//   const lastSegmentPolicyURL = policyURL.substring(policyURL.lastIndexOf('/') + 1);
-//   if (lastSegmentRequestURL && lastSegmentSystemURL === lastSegmentPolicyURL) return true;
-
-//   return false;
-// };
-
-// exports.authorization = async (req, res, next) => {
-//   for (let i = 0; i < authorizationData.length; i += 1) {
-//     if (authorizationData[i].role === res.locals.ROLE) {
-//       if (authorizationData[i].method === res.locals.METHOD
-//                    || authorizationData[i].method === '*') {
-//         const isValidated = validateURL(req, authorizationData[i].url);
-//         if (isValidated) return next();
-//       }
-//     }
-//   }
-//   return errorResponse(req, res, errorMessages.YOU_ARE_NOT_AUTHORIZED, 401);
-// };
-
-// exports.getROLES = async () => {
-//   const csvPath = path.resolve(path.join(__dirname, 'policy.csv'));
-
-//   await csv()
-//     .fromFile(csvPath)
-//     .then((jsonObj) => {
-//       authorizationData.push(...jsonObj);
-//     });
-// };
+exports.authorization = (roles) => (req, res, next) => {
+  if (!roles.includes(req.user.role)) {
+    return errorResponse(req, res, errorMessages.UNAUTHORIZED, 403);
+  }
+  return next();
+}

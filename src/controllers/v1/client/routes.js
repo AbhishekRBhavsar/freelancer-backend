@@ -47,21 +47,10 @@ const upload = multer({
   limits: { fileSize: 2000000 } // file size limit for 2 mb
 });
 
-router.post('/signup', controller.signup);
-router.post('/login', controller.login);
 
-router.put('/profile', authentication, authorization(['developer']), controller.updateProfile);
-router.get('/profile', authentication, controller.getProfile);
-router.get('/user/:userId?', authentication, controller.getUser); 
-router.post('/logout', authentication, controller.logout);
-router.post('/avatar', authentication, upload.single('avatar'), controller.updateAvatar);
-router.get('/users', authentication, controller.getAllUser);
-
-router.get('/admin/users', authentication, authorization(['admin']), controller.getDetailedUsedrs);
-router.get('/admin/users/activity', authentication, authorization(['admin']), controller.getUserActivity);
-router.post('/invite', authentication, authorization(['client', 'developer']), controller.invite);
-
-// router.get('/users/:userId', authentication, authorization, controller.findById);
-// router.delete('/users/:userId', authentication, authorization, controller.deleteById);
+router.get('/client/profile', authentication, controller.getClientProfile);
+router.put('/client/profile', authentication, authorization(['client']), controller.updateProfile);
+router.put('/client/projects', authentication, authorization(['client']), controller.updateClientProject);
+router.patch('/client/org', authentication, authorization(['client']), controller.updateClientOrganization);
 
 module.exports = router;

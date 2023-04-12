@@ -15,10 +15,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  picture: {
     type: String,
   },
-  summary: {
+  about: {
     type: String,
   },
   email: {
@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  userDetails: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ServiceProviders',
+  },
   googleAuth: {
     type: String,
   },
@@ -40,11 +44,15 @@ const userSchema = new mongoose.Schema({
   socialAuthId: {
     type: String,
   },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other'],
+  },
   role: {
     type: String,
     required: true,
     default: 'user',
-    enum: ['user', 'admin'],
+    enum: ['developer', 'client', 'admin'],
   },
   isVerified: {
     type: Boolean,

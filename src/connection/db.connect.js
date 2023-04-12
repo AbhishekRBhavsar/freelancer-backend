@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const { envConstants } = require('../helpers/constants');
+const { MongoMemoryServer } = require("mongodb-memory-server");
+
+let mongoServer;
 
 const connectionObj = {
   useNewUrlParser: true,
@@ -9,13 +12,16 @@ const connectionObj = {
 if (envConstants.AUTHENTICATION === 'false') delete connectionObj.auth;
 
 exports.connect = async () => {
-  mongoose.set('debug', envConstants.DB_DEBUG_MODE === 'true');
+  mongoose.set('debug', true);
   try {
     if (process.env.NODE_ENV === 'test') {
-      await mongoose.connect(envConstants.DB_URI_TEST, connectionObj);
+      mongoServer = await MongoMemoryServer.create();
+      const mongoUri = mongoServer.getUri();
+
+      await mongoose.connect(mongoUri, connectionObj);
       console.log('Connected to test database');
-    } else {
-      await mongoose.connect(envConstants.DB_URI, connectionObj);
+    } else if (process.env.NODE_ENV === 'development') {
+      await mongoose.connect(envConstants.DB_URI_TEST, connectionObj);
     }
   } catch (error) {
     console.log(error);

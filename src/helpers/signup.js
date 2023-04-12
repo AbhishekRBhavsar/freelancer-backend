@@ -1,6 +1,10 @@
-const { OAuth2Client } = require('google-auth-library');
+let { OAuth2Client } = require('google-auth-library');
 const { envConstants } = require('./constants');
+// const mock = require('../../tests/users.test');
 
+// if (process.env.NODE_ENV === 'test') {
+//   OAuth2Client = mock.OAuth2Client;
+// }
 const client = new OAuth2Client(envConstants.GOOGLE_CLIENT_ID);
 
 exports.verifyGoogleToken = async (token) => {

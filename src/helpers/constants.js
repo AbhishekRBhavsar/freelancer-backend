@@ -30,6 +30,13 @@ exports.envConstants = {
   SSL_KEY_PATH: process.env.SSL_KEY_PATH,
 
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+
+  // EMAIL
+  SMTP_HOST: process.env.SMTP_HOST,
+  SMTP_PORT: process.env.SMTP_PORT,
+  SMTP_EMAIL: process.env.SMTP_EMAIL,
+  SMTP_PASSWORD: process.env.SMTP_PASSWORD,
+  FROM_NAME: process.env.FROM_NAME,
 };
 
 exports.roleConstants = {
