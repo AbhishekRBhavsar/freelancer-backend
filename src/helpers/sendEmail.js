@@ -104,7 +104,7 @@ let inviteHTML = (user) => (`
       <h2>You're Invited</h2>
       <p>Hi,</p>
       <p>You've been invited to join Freelancer platform by your friend ${user.name}. We're excited to have you on board! Click the button below to create your account and start exploring our services.</p>
-      <a href="https://example.com/signup" class="button">Create Account</a>
+      <a href="https://sonar5858.github.io/freelancer-frontend/signup" class="button">Create Account</a>
       <div class="image-container">
         <img src="https://images.unsplash.com/photo-1551275073-f8adef647c1d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1167&q=80" alt="Freelancer logo" class="image">
       </div>
