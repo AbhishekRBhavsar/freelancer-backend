@@ -8,7 +8,7 @@ const { envConstants } = require('../helpers/constants');
 const { errorMessages } = require('../helpers/messages');
 const { authentication } = require('../middleware/auth');
 
-const whitelist = [`${envConstants.FRONT_END_URL}`, `${envConstants.APP_HOST}:${envConstants.APP_PORT}`, 'http://localhost:3000', '*'];
+const whitelist = ['https://sonar5858.github.io', `${envConstants.FRONT_END_URL}`, `${envConstants.APP_HOST}:${envConstants.APP_PORT}`, 'http://localhost:3000', '*'];
 
 const perIpTimeLimit = 15 * 60 * 1000; // 15 minutes
 
