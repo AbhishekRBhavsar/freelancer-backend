@@ -21,6 +21,7 @@ exports.successResponse = (
 };
 
 exports.errorResponse = (req, res, message = errorMessages.SOMETHING_WENT_WRONG, code = 500) => {
+  console.log(message);
   res.status(code);
   res.send({
     code,
