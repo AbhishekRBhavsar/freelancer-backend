@@ -9,7 +9,9 @@ const app = express();
 // const { getROLES } = require('./src/middleware/middleware');
 
 app.options('*', cors());
-app.use(cors());
+app.use(cors({
+  preflightContinue: true,
+}));
 
 dbConn.connect();
 
