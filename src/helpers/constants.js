@@ -37,10 +37,14 @@ exports.envConstants = {
   SMTP_EMAIL: process.env.SMTP_EMAIL,
   SMTP_PASSWORD: process.env.SMTP_PASSWORD,
   FROM_NAME: process.env.FROM_NAME,
+
+  // ssl/tls
+  SSL_CERT_PATH: process.env.SSL_CERT_PATH,
+  SSL_KEY_PATH: process.env.SSL_KEY_PATH,
 };
 
 exports.roleConstants = {
   ADMIN: 'admin',
-  DEV: 'dev',
+  DEV: 'developer',
   CLIENT: 'client',
 };
